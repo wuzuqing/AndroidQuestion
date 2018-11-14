@@ -19,7 +19,7 @@ class QuestionActivity : BaseActivity() {
             toAnswer(mAdapter.getItem(position)!!, position, view.findViewById(R.id.layoutAsk))
         }
         srf.setOnRefreshListener {
-            lastId = 0
+            lastId = -1L
             queryData()
         }
         mAdapter.setOnLoadMoreListener({
@@ -49,7 +49,7 @@ class QuestionActivity : BaseActivity() {
     var tag = "activity"
     lateinit var mAdapter: QuestionAdapter
 
-    private fun toAnswer(item: QuestionBean, position: Int, view: View) {
+    private fun toAnswer(item: QuestionBean, position: Int, view: View?) {
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra("tag", tag)
         intent.putExtra("question", item.question)
@@ -63,18 +63,20 @@ class QuestionActivity : BaseActivity() {
         }
     }
 
-    private var lastId = 0L
+    private var lastId = -1L
     private val pageSize = 10
     /**
      * 查询数据
      */
     private fun queryData() {
-        if (lastId == -1L) {
+        if (lastId == -2L) {
             return
         }
-        val list = DbCodeManager.getInstance().session.questionBeanDao.loadPage("id >= $lastId and questionTag = '$tag'", pageSize)
+
+        val list = DbCodeManager.getInstance().session.questionBeanDao.loadPage("id > $lastId and questionTagStr = '$tag'", pageSize)
         if (list != null && list.isNotEmpty()) {
             showList(list)
+            refreshState()
             return
         }
         HttpHelper.obtain().get(Const.GET_QUESTION_LIST, {
@@ -88,24 +90,31 @@ class QuestionActivity : BaseActivity() {
 
             override fun onFinish() {
                 super.onFinish()
-                if (srf.isRefreshing) {
-                    srf.isRefreshing = false
-                } else {
-                    mAdapter.loadMoreComplete()
-                }
+                refreshState()
             }
 
             override fun emptyData() {
                 if (!srf.isRefreshing) {
                     mAdapter.loadMoreEnd()
+                }else{
+                    srf.isRefreshing = false
+                    lastId = -2L
                 }
             }
         })
 
     }
 
+    private fun refreshState() {
+        if (srf.isRefreshing) {
+            srf.isRefreshing = false
+        } else {
+            mAdapter.loadMoreComplete()
+        }
+    }
+
     private fun showList(result: List<QuestionBean>) {
-        if (lastId == 0L) {
+        if (lastId == -1L) {
             mAdapter.setNewData(result)
         } else {
             mAdapter.addData(result)

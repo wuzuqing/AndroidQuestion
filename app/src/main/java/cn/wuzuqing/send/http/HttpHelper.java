@@ -57,10 +57,13 @@ public class HttpHelper {
     }
 
     public void get(Object tag, String url, Consumer<Map<String, Object>> createParams, IHttpCallBack callBack) {
-        if (isWifiProxy()) {
+        if (!NetworkUtils.isConnected()) {
+            callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
+        } else if (isWifiProxy()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
             return;
         }
+//        }else if ()
         url = getRealUrl(url);
         Map<String, Object> params = defaultParams(createParams);
         url = tranUrl(url, params);
@@ -73,7 +76,9 @@ public class HttpHelper {
     }
 
     public void post(Object tag, String url, Consumer<Map<String, Object>> createParams, IHttpCallBack callBack) {
-        if (isWifiProxy()) {
+        if (!NetworkUtils.isConnected()) {
+            callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
+        } else if (isWifiProxy()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
             return;
         }

@@ -3,6 +3,7 @@ package cn.wuzuqing.lib_api;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public abstract class AbstractDao<K extends Number, T> implements BaseDao<K, T> 
     private String insertSql;
     private String updateSql;
     private int updateKeyIndex;
-    protected boolean isSetPrimaryKey ;
+    protected boolean isSetPrimaryKey = true ;
     private static final int WORK_INSERT = 0;
     private static final int WORK_UPDATE = 1;
     private static final int WORK_DELETE = 2;
@@ -227,7 +228,9 @@ public abstract class AbstractDao<K extends Number, T> implements BaseDao<K, T> 
         return queryList(selectSql(null));
     }
 
+    private static final String TAG = "LogUtils";
     private List<T> queryList(String sql) {
+        Log.d(TAG, "queryList: "+sql);
         Cursor cursor = database.getReadableDatabase().rawQuery(sql, null);
         List<T> result = new ArrayList<>();
         while (cursor.moveToNext()) {

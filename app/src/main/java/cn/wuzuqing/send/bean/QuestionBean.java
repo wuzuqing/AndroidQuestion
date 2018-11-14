@@ -8,20 +8,20 @@ public class QuestionBean {
 	@Id()
 	private Long id;
 
-	private String questionTag;
+	private String questionTagStr;
 
 	private String question;
 
 	private String createDate;
 
-	@Gentrace(-1869763958)
+	@Gentrace(-1353866761)
 	public QuestionBean(){
 	}
 
-	@Gentrace(1285061586)
-	public QuestionBean(Long id,String questionTag,String question,String createDate){
+	@Gentrace(766554944)
+	public QuestionBean(Long id,String questionTagStr,String question,String createDate){
 		this.id = id;
-		this.questionTag = questionTag;
+		this.questionTagStr = questionTagStr;
 		this.question = question;
 		this.createDate = createDate;
 	}
@@ -34,12 +34,12 @@ public class QuestionBean {
 		return this.id ;
 	}
 
-	public void setQuestionTag ( String questionTag ){
-		this.questionTag = questionTag;
+	public void setQuestionTagStr ( String questionTagStr ){
+		this.questionTagStr = questionTagStr;
 	}
 
-	public String getQuestionTag () {
-		return this.questionTag ;
+	public String getQuestionTagStr () {
+		return this.questionTagStr ;
 	}
 
 	public void setQuestion ( String question ){
@@ -62,7 +62,7 @@ public class QuestionBean {
 	public String toString() {
 		return "QuestionBean{" +
 				"id=" + id + 
-				",questionTag=" + questionTag + 
+				",questionTagStr=" + questionTagStr + 
 				",question=" + question + 
 				",createDate=" + createDate + 
 				"}";

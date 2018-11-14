@@ -3,6 +3,7 @@ package cn.wuzuqing.send;
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -10,8 +11,15 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
+import cn.wuzuqing.send.bean.AnswerBean;
+import cn.wuzuqing.send.constant.Const;
+import cn.wuzuqing.send.http.Consumer;
+import cn.wuzuqing.send.http.HttpHelper;
+import cn.wuzuqing.send.http.ListHttpCallBack;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -25,6 +33,7 @@ public class ResultActivity extends BaseActivity {
     private TextView textAsk;
     private TextView textAnswer;
     private TextView textLink;
+    private String link;
 
     @Override
     protected int getLayoutId() {
@@ -59,21 +68,38 @@ public class ResultActivity extends BaseActivity {
         if (intent != null) {
             int position = intent.getIntExtra("position", 0);
             final String question = intent.getStringExtra("question");
+            final String questionId = intent.getStringExtra("questionId");
             final String tag = intent.getStringExtra("tag");
-            String content = intent.getStringExtra("content");
-            final String link = intent.getStringExtra("link");
             textAsk.setText(String.format(Locale.getDefault(), "%d : %s", position, question));
-            textAnswer.setText(content);
-            if (!TextUtils.isEmpty(link)) {
-                textLink.setText(link);
-                textLink.setOnClickListener(new View.OnClickListener() {
+            setTitle(tag);
+            List<AnswerBean> beans = CacheManager.getInstance().get(Const.GET_ANSWER + questionId);
+            if (beans == null) {
+                HttpHelper.obtain().get(Const.GET_ANSWER, new Consumer<Map<String, Object>>() {
                     @Override
-                    public void onClick(View v) {
-                        toWebView(link, question);
+                    public void accept(Map<String, Object> params) {
+                        params.put("questionId", questionId);
+                    }
+                }, new ListHttpCallBack<AnswerBean>() {
+                    @Override
+                    public void onSuccess(@NonNull List<AnswerBean> result) {
+                        showResult(result, question);
+                        CacheManager.getInstance().put(Const.GET_ANSWER + questionId, result);
+                    }
+
+                    @Override
+                    public void emptyData() {
+                        textAnswer.setText("暂无答案");
+                    }
+
+                    @Override
+                    public void onFailed(int what, String msg) {
+                        super.onFailed(what, msg);
+                        emptyData();
                     }
                 });
             }
-            setTitle(tag);
+
+
         }
 
         //启动动画
@@ -96,6 +122,26 @@ public class ResultActivity extends BaseActivity {
                 startTextAnim(textAnswer);
             }
         });
+    }
+
+    private void showResult(@NonNull List<AnswerBean> result, final String question) {
+        StringBuilder content = new StringBuilder();
+        for (AnswerBean answerBean : result) {
+            content.append(answerBean.getContent());
+            if (answerBean.getUrl() != null) {
+                link = answerBean.getUrl();
+            }
+        }
+        textAnswer.setText(content);
+        if (!TextUtils.isEmpty(link)) {
+            textLink.setText(link);
+            textLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toWebView(link, question);
+                }
+            });
+        }
     }
 
     private void toWebView(String link, String question) {

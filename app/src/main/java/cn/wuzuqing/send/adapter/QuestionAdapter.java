@@ -21,7 +21,7 @@ public class QuestionAdapter extends BaseQuickAdapter<QuestionBean, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder helper, QuestionBean item) {
-        helper.setText(R.id.ask, item.getQuestion());
+        helper.setText(R.id.ask,  helper.getLayoutPosition() +" : "+ item.getQuestion());
         helper.setText(R.id.time, item.getCreateDate());
     }
 }

@@ -31,11 +31,11 @@ public class QuestionBeanDao extends AbstractDao<Long, QuestionBean> {
  return entity.getId(); 
 }
 
-	public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS question (id INTEGER primary key ,questionTag TEXT,question TEXT,createDate TEXT)";
+	public static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS question (id INTEGER primary key ,questionTagStr TEXT,question TEXT,createDate TEXT)";
 
 	@Override 
 	protected String[] getColumns(){
-		 return new String[]{"id","questionTag","question","createDate"};
+		 return new String[]{"id","questionTagStr","question","createDate"};
 	}
 
 
@@ -55,9 +55,9 @@ public class QuestionBeanDao extends AbstractDao<Long, QuestionBean> {
 		if ( id != null) {
 			stmt.bindLong(1, id);
 		}
-		String questionTag = entity.getQuestionTag();
-		if ( questionTag != null) {
-			stmt.bindString(2, questionTag);
+		String questionTagStr = entity.getQuestionTagStr();
+		if ( questionTagStr != null) {
+			stmt.bindString(2, questionTagStr);
 		}
 		String question = entity.getQuestion();
 		if ( question != null) {

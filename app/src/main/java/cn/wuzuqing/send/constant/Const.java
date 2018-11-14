@@ -12,5 +12,6 @@ package cn.wuzuqing.send.constant;
 public interface Const {
 
     String GET_ALL_TAG = "getAllTag";
+    String GET_ANSWER = "getAnswer";
     String GET_QUESTION_LIST = "getQuestionByTag";
 }

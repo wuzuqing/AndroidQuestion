@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import cn.wuzuqing.send.adapter.TagAdapter
 import cn.wuzuqing.send.bean.QuestionTagBean
 import cn.wuzuqing.send.constant.Const
+import cn.wuzuqing.send.dao.DbCodeManager
 import cn.wuzuqing.send.http.HttpHelper
 import cn.wuzuqing.send.http.ListHttpCallBack
 import kotlinx.android.synthetic.main.activity_tag.*
@@ -44,14 +45,24 @@ class TagActivity : BaseActivity() {
     private fun loadData() {
         var value: List<QuestionTagBean>? = CacheManager.getInstance().get(Const.GET_ALL_TAG)
         if (value != null) {
-            mAdapter.setNewData(value)
+            showResult(value)
+            return
+        }
+        value = DbCodeManager.getInstance().session.questionTagBeanDao.loadAll()
+        if ( value.isNotEmpty()) {
+            showResult(value)
             return
         }
         HttpHelper.obtain().get(Const.GET_ALL_TAG, null, object : ListHttpCallBack<QuestionTagBean>() {
             override fun onSuccess(result: List<QuestionTagBean>) {
-                mAdapter.setNewData(result)
-                CacheManager.getInstance().put(Const.GET_ALL_TAG, result)
+                showResult(result)
             }
         })
+    }
+
+    private fun showResult(value: List<QuestionTagBean>?) {
+        mAdapter.setNewData(value)
+        CacheManager.getInstance().put(Const.GET_ALL_TAG, value)
+        DbCodeManager.getInstance().session.questionTagBeanDao.insertIx(value)
     }
 }

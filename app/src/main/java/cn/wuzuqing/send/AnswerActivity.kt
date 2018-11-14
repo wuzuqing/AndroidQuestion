@@ -11,9 +11,9 @@ class AnswerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_answer)
 
         if (intent != null) {
-//            val content = intent.getStringExtra("content")
-//            tv_content.text = content
-//            tv_link.text = intent.getStringExtra("link")
+            val content = intent.getStringExtra("content")
+            tv_content.text = content
+            tv_link.text = intent.getStringExtra("link")
         }
     }
 }
