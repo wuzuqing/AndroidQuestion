@@ -93,6 +93,11 @@ class QuestionActivity : BaseActivity() {
                 refreshState()
             }
 
+            override fun onFailed(what: Int, msg: String?) {
+                super.onFailed(what, msg)
+               emptyData()
+            }
+
             override fun emptyData() {
                 if (!srf.isRefreshing) {
                     mAdapter.loadMoreEnd()

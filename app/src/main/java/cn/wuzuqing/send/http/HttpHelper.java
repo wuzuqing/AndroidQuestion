@@ -59,6 +59,7 @@ public class HttpHelper {
     public void get(Object tag, String url, Consumer<Map<String, Object>> createParams, IHttpCallBack callBack) {
         if (!NetworkUtils.isConnected()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
+            return;
         } else if (isWifiProxy()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
             return;
@@ -78,6 +79,7 @@ public class HttpHelper {
     public void post(Object tag, String url, Consumer<Map<String, Object>> createParams, IHttpCallBack callBack) {
         if (!NetworkUtils.isConnected()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
+            return;
         } else if (isWifiProxy()) {
             callBack.onFailed(-1000, "请求失败,请检查您的网络是否存在异常");
             return;

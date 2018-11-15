@@ -57,6 +57,7 @@ class TagActivity : BaseActivity() {
             override fun onSuccess(result: List<QuestionTagBean>) {
                 showResult(result)
             }
+
         })
     }
 
