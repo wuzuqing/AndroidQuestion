@@ -24,7 +24,7 @@ public class MyApplication extends Application {
         super.onCreate();
         instance = this;
         HttpHelper.init(new OkHttpProcessor());
-        HttpHelper.obtain().setBaseUrl("http://120.79.16.93:9090/example/");
+        HttpHelper.obtain().setBaseUrl("http://120.79.16.93:17912/example/");
         DbCodeManager.init(getApplicationContext());
     }
 

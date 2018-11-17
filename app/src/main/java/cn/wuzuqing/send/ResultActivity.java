@@ -13,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import cn.wuzuqing.send.bean.AnswerBean;
 import cn.wuzuqing.send.constant.Const;
+import cn.wuzuqing.send.dao.DbCodeManager;
 import cn.wuzuqing.send.http.Consumer;
 import cn.wuzuqing.send.http.HttpHelper;
 import cn.wuzuqing.send.http.ListHttpCallBack;
@@ -73,6 +74,7 @@ public class ResultActivity extends BaseActivity {
             textAsk.setText(String.format(Locale.getDefault(), "%d : %s", position, question));
             setTitle(tag);
             List<AnswerBean> beans = CacheManager.getInstance().get(Const.GET_ANSWER + questionId);
+//            DbCodeManager.getInstance().getSession().getAnswerBeanDao()
             if (beans == null) {
                 HttpHelper.obtain().get(Const.GET_ANSWER, new Consumer<Map<String, Object>>() {
                     @Override
